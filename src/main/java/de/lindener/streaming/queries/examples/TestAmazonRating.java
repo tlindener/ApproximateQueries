@@ -1,12 +1,11 @@
 package de.lindener.streaming.queries.examples;
 
-import de.lindener.streaming.queries.models.HllSketchAggregation;
-import de.lindener.streaming.queries.models.TopNQueryResult;
-import de.lindener.streaming.queries.processing.CountDistinctQueries;
+import de.lindener.streaming.queries.models.QuantileQueryResult;
 import de.lindener.streaming.queries.processing.Queries;
 import de.lindener.streaming.queries.sources.amazon.AmazonReviewRating;
 import de.lindener.streaming.queries.sources.amazon.AmazonReviewRatingSource;
 import org.apache.flink.api.common.JobExecutionResult;
+import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
@@ -35,8 +34,14 @@ public class TestAmazonRating {
             }
         };
 
-        DataStream<HllSketchAggregation> stream = CountDistinctQueries.runContinuousHll(inputStream, targetKeySelector, targetValueSelector, 10000);
-        DataStream<TopNQueryResult> stream1 = Queries.continuousTopN(inputStream, targetValueSelector, 5);
+//        DataStream<HllSketchAggregation> stream = CountDistinctQueries.runContinuousHll(inputStream, targetKeySelector, targetValueSelector, 10000);
+        DataStream<QuantileQueryResult> stream1 = Queries.continuousQuantiles(inputStream, targetValueSelector);
+        stream1.map(new MapFunction<QuantileQueryResult, String>() {
+            @Override
+            public String map(QuantileQueryResult quantileQueryResult) throws Exception {
+                return quantileQueryResult.getSketch().toString();
+            }
+        }).print();
         JobExecutionResult result = env.execute("My Flink Job");
         System.out.println("The job took " + result.getNetRuntime(TimeUnit.SECONDS) + " to execute");
 

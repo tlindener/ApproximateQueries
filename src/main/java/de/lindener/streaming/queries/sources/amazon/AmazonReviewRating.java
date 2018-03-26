@@ -1,6 +1,6 @@
 package de.lindener.streaming.queries.sources.amazon;
 
-public class AmazonReviewRating {
+public class AmazonReviewRating implements Comparable {
     private String reviewerId;
     private String asin;
     private Double rating;
@@ -36,5 +36,15 @@ public class AmazonReviewRating {
 
     public void setTimestamp(Long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        int base = this.getAsin().compareTo(((AmazonReviewRating) o).getAsin());
+        if (base == 0) {
+            return this.getRating().compareTo(((AmazonReviewRating) o).getRating());
+        }
+        return base;
+
     }
 }

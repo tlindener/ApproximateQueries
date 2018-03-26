@@ -25,7 +25,7 @@ public class QuantileFunction<T>
     private Comparator orderType;
 
     public QuantileFunction(KeySelector keySelector) {
-        this(keySelector, 128, 1, ErrorType.NO_FALSE_POSITIVES);
+        this(keySelector, 128, 100000, ErrorType.NO_FALSE_POSITIVES);
     }
 
     public QuantileFunction(KeySelector keySelector, int sketchMapSize, int emitMin) {
@@ -47,7 +47,7 @@ public class QuantileFunction<T>
     @Override
     public void open(Configuration parameters) throws Exception {
         if (sketch == null) {
-            sketch = ItemsSketch.getInstance(sketchMapSize, (Comparator<? super T>) orderType);
+            sketch = ItemsSketch.getInstance(sketchMapSize, (Comparator<? super T>) Comparator.naturalOrder());
             LOG.info("Created new sketch");
         }
     }

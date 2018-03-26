@@ -14,7 +14,7 @@ public class Queries {
         return inputStream.flatMap(topNSketchFunction);
     }
 
-    public static DataStream<QuantileQueryResult> continuousQuantiles(DataStream<?> inputStream, KeySelector valueSelector, int topN) {
+    public static DataStream<QuantileQueryResult> continuousQuantiles(DataStream<?> inputStream, KeySelector valueSelector) {
         QuantileFunction quantileFunction = new QuantileFunction(valueSelector);
         return inputStream.flatMap(quantileFunction);
     }
