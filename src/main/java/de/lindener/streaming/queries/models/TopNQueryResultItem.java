@@ -1,4 +1,4 @@
-package de.lindener.queries.streaming.approximate.models;
+package de.lindener.streaming.queries.models;
 
 public class TopNQueryResultItem<T> {
     private T item;

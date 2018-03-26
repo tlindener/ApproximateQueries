@@ -17,11 +17,11 @@
  * limitations under the License.
  */
 
-package de.lindener.queries.streaming.approximate.aggregate;
-
-import java.io.Serializable;
+package de.lindener.streaming.queries.aggregate;
 
 import org.apache.flink.api.common.functions.Function;
+
+import java.io.Serializable;
 
 /**
  * @param <K> the vertex ID type

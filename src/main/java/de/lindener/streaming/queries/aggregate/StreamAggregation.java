@@ -1,12 +1,12 @@
-package de.lindener.queries.streaming.approximate.aggregate;
+package de.lindener.streaming.queries.aggregate;
 
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.functions.ReduceFunction;
 import org.apache.flink.api.java.operators.translation.WrappingFunction;
+import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.util.Collector;
-import org.apache.flink.api.java.tuple.Tuple2;
 
 import java.io.Serializable;
 

@@ -17,7 +17,7 @@
  */
 
 
-package de.lindener.queries.streaming.approximate.aggregate;
+package de.lindener.streaming.queries.aggregate;
 
 import org.apache.flink.api.common.functions.FoldFunction;
 import org.apache.flink.api.common.functions.MapFunction;
