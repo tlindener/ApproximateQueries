@@ -1,6 +1,7 @@
 package de.lindener.streaming.queries.models;
 
 import com.yahoo.sketches.hll.HllSketch;
+import com.yahoo.sketches.hll.TgtHllType;
 import com.yahoo.sketches.hll.Union;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -13,13 +14,24 @@ public class HllSketchAggregation implements Serializable {
 //    private Logger LOG = LoggerFactory.getLogger(HllSketchAggregation.class);
 
     private HashMap<Object, HllSketch> sketchMap = new HashMap<>();
+    private TgtHllType tgtHllType = TgtHllType.HLL_4;
+    private int lgk = 4;
+
+    public HllSketchAggregation(TgtHllType tgtHllType, int lgk) {
+        this.tgtHllType = tgtHllType;
+        this.lgk = lgk;
+    }
+
+    public HllSketchAggregation() {
+
+    }
 
     public void update(Object key, Object item) {
         HllSketch sketch;
         if (sketchMap.containsKey(key)) {
             sketch = sketchMap.get(key);
         } else {
-            sketch = new HllSketch(4);
+            sketch = new HllSketch(lgk);
         }
         sketchMap.put(key, updateSketch(sketch, item));
     }
@@ -95,7 +107,7 @@ public class HllSketchAggregation implements Serializable {
     private HashMap<Object, HllSketch> mergeItems(HashMap<Object, HllSketch> smallMap, HashMap<Object, HllSketch> largeMap) {
         for (Map.Entry<Object, HllSketch> set : smallMap.entrySet()) {
             if (largeMap.containsKey(set.getKey())) {
-                Union union = new Union(4);
+                Union union = new Union(lgk);
                 union.update(set.getValue());
                 union.update(largeMap.get(set.getKey()));
 

@@ -61,7 +61,7 @@ public class HllSketchFunction<T> extends RichFlatMapFunction<T, HllSketchAggreg
         String METHOD_NAME = "open";
         LOG.info(METHOD_NAME);
         if (aggregation == null) {
-            aggregation = new HllSketchAggregation();
+            aggregation = new HllSketchAggregation(tgtHllType, lgk);
         }
     }
 
