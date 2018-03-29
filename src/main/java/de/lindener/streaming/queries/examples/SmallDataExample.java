@@ -1,7 +1,7 @@
 package de.lindener.streaming.queries.examples;
 
-import de.lindener.streaming.queries.functions.HllSketchFunction;
 import de.lindener.streaming.queries.models.HllSketchAggregation;
+import de.lindener.streaming.queries.processing.CountDistinctQueries;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.datastream.DataStream;
@@ -20,7 +20,6 @@ public class SmallDataExample {
             }
         }
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        env.setMaxParallelism(200);
         DataStream<Tuple2<String, Integer>> inputStream = env.fromCollection(data);
 
         KeySelector targetKeySelector = new KeySelector<Tuple2<String, Integer>, Object>() {
@@ -37,8 +36,8 @@ public class SmallDataExample {
             }
 
         };
-        HllSketchFunction sketchFunction2 = new HllSketchFunction(targetKeySelector, targetValueSelector);
-        DataStream<HllSketchAggregation> stream = inputStream.keyBy(targetKeySelector).flatMap(sketchFunction2).setParallelism(2);
+
+        DataStream<HllSketchAggregation> stream = CountDistinctQueries.runContinuousHll(inputStream, targetKeySelector, targetValueSelector, 1);
         env.execute();
     }
 }
