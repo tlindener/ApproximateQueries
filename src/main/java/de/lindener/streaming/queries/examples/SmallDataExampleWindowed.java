@@ -5,6 +5,7 @@ import de.lindener.streaming.queries.processing.CountDistinctQueries;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.api.java.tuple.Tuple2;
+import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
@@ -24,6 +25,7 @@ public class SmallDataExampleWindowed {
             }
         }
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        env.setStreamTimeCharacteristic(TimeCharacteristic.ProcessingTime);
         DataStream<Tuple2<String, Integer>> inputStream = env.fromCollection(data);
 
         KeySelector targetKeySelector = new KeySelector<Tuple2<String, Integer>, Object>() {
