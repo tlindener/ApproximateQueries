@@ -4,7 +4,7 @@ import de.lindener.streaming.queries.models.ThetaSketchAggregation;
 import org.apache.flink.api.common.functions.AggregateFunction;
 import org.apache.flink.api.java.functions.KeySelector;
 
-public class ThetaSketchWindowAggregate implements AggregateFunction<Object, ThetaSketchAggregation, ThetaSketchAggregation> {
+public class ThetaSketchWindowAggregate<T> implements AggregateFunction<T, ThetaSketchAggregation, ThetaSketchAggregation> {
 
     KeySelector keySelector;
     KeySelector valueSelector;
@@ -20,7 +20,7 @@ public class ThetaSketchWindowAggregate implements AggregateFunction<Object, The
     }
 
     @Override
-    public ThetaSketchAggregation add(Object input, ThetaSketchAggregation aggregation) {
+    public ThetaSketchAggregation add(T input, ThetaSketchAggregation aggregation) {
         Object key = null;
         Object value = null;
         try {

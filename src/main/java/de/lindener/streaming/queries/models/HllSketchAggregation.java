@@ -26,6 +26,22 @@ public class HllSketchAggregation implements Serializable {
 
     }
 
+    public TgtHllType getTgtHllType() {
+        return tgtHllType;
+    }
+
+    public void setTgtHllType(TgtHllType tgtHllType) {
+        this.tgtHllType = tgtHllType;
+    }
+
+    public int getLgk() {
+        return lgk;
+    }
+
+    public void setLgk(int lgk) {
+        this.lgk = lgk;
+    }
+
     public void update(Object key, Object item) {
         HllSketch sketch;
         if (sketchMap.containsKey(key)) {

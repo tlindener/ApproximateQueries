@@ -4,11 +4,14 @@ import de.lindener.streaming.queries.models.HllSketchAggregation;
 import org.apache.flink.api.common.functions.AggregateFunction;
 import org.apache.flink.api.java.functions.KeySelector;
 
-public class HllSketchWindowAggregate implements AggregateFunction<Object, HllSketchAggregation, HllSketchAggregation> {
+public class HllSketchWindowAggregate<T> implements AggregateFunction<T, HllSketchAggregation, HllSketchAggregation> {
 
     KeySelector keySelector;
     KeySelector valueSelector;
 
+    public HllSketchWindowAggregate(){
+
+    }
     public HllSketchWindowAggregate(KeySelector keySelector, KeySelector valueSelector) {
         this.keySelector = keySelector;
         this.valueSelector = valueSelector;
@@ -20,7 +23,8 @@ public class HllSketchWindowAggregate implements AggregateFunction<Object, HllSk
     }
 
     @Override
-    public HllSketchAggregation add(Object input, HllSketchAggregation hllSketchAggregation) {
+    public HllSketchAggregation add(T input, HllSketchAggregation hllSketchAggregation) {
+        System.out.println("add  input");
         Object key = null;
         Object value = null;
         try {
@@ -36,11 +40,13 @@ public class HllSketchWindowAggregate implements AggregateFunction<Object, HllSk
 
     @Override
     public HllSketchAggregation getResult(HllSketchAggregation hllSketchAggregation) {
+        System.out.println("get result");
         return hllSketchAggregation;
     }
 
     @Override
     public HllSketchAggregation merge(HllSketchAggregation hllSketchAggregation, HllSketchAggregation acc1) {
+        System.out.println("merge");
         return acc1.mergeValues(hllSketchAggregation);
     }
 }
