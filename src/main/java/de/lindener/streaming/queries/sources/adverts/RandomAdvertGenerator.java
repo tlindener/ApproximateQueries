@@ -2,6 +2,8 @@ package de.lindener.streaming.queries.sources.adverts;
 
 import org.apache.flink.streaming.api.functions.source.SourceFunction;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
 
 public class RandomAdvertGenerator implements SourceFunction<ImpressionLog> {
@@ -11,8 +13,8 @@ public class RandomAdvertGenerator implements SourceFunction<ImpressionLog> {
     private int counter = 0;
     private int NumPublishers = 5;
     private int NumAdvertisers = 3;
-    int NumWebsites = 10000;
-    int NumCookies = 10000;
+    int numWebsites = 10000;
+    int numCookies = 10000;
     String[] publishers;
     String[] advertisers;
     String UnknownGeo = "unknown";
@@ -20,9 +22,19 @@ public class RandomAdvertGenerator implements SourceFunction<ImpressionLog> {
 
 
     public RandomAdvertGenerator(int bound) {
+        this(bound, 10000, 10000, 5, 3);
+    }
+
+    public RandomAdvertGenerator(int bound, int numWebsites, int numCookies) {
+        this(bound, numWebsites, numCookies, 5, 3);
+    }
+
+    public RandomAdvertGenerator(int bound, int numWebsites, int numCookies, int numPublishers, int numAdvertisers) {
         this.bound = bound;
-        publishers = createRandomList("publisher_", NumPublishers);
-        advertisers = createRandomList("advertiser_", NumAdvertisers);
+        this.numWebsites = numWebsites;
+        this.numCookies = numCookies;
+        publishers = createRandomList("publisher_", numPublishers);
+        advertisers = createRandomList("advertiser_", numAdvertisers);
     }
 
     private String[] createRandomList(String name, int max) {
@@ -36,11 +48,11 @@ public class RandomAdvertGenerator implements SourceFunction<ImpressionLog> {
     @Override
     public void run(SourceContext<ImpressionLog> sourceContext) throws Exception {
         while (isRunning && counter < bound) {
-            long timestamp = System.currentTimeMillis();
+            Date timestamp = Calendar.getInstance().getTime();
             String publisher = publishers[rnd.nextInt(NumPublishers)];
             String advertiser = advertisers[rnd.nextInt(NumAdvertisers)];
-            String website = "website_" + rnd.nextInt(NumWebsites) + ".com";
-            String cookie = "cookie_" + rnd.nextInt(NumCookies);
+            String website = "website_" + rnd.nextInt(numWebsites) + ".com";
+            String cookie = "cookie_" + rnd.nextInt(numCookies);
             String geo = Geos[rnd.nextInt(Geos.length)];
             Double bid = Math.abs(rnd.nextDouble()) % 1;
             ImpressionLog log = new ImpressionLog(timestamp, publisher, advertiser, website, geo, bid, cookie);
