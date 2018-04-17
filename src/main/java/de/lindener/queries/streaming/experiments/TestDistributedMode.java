@@ -1,7 +1,7 @@
 package de.lindener.queries.streaming.experiments;
 
-import de.lindener.streaming.queries.functions.HllSketchFunction;
-import de.lindener.streaming.queries.models.HllSketchAggregation;
+import de.lindener.streaming.approximate.queries.functions.HllSketchFunction;
+import de.lindener.streaming.approximate.queries.models.HllSketchAggregation;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.datastream.DataStream;

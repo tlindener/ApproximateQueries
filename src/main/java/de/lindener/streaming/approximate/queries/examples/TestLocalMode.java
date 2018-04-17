@@ -1,4 +1,4 @@
-package de.lindener.queries.streaming.experiments;
+package de.lindener.streaming.approximate.queries.examples;
 
 import de.lindener.streaming.approximate.queries.models.HllSketchAggregation;
 import org.apache.flink.api.java.tuple.Tuple2;
