@@ -18,17 +18,14 @@ public class CountDistinctQueries {
     }
 
     public static <T> DataStream<HllSketchAggregation> runContinuousWindowHll(DataStream<T> input, KeySelector keySelector, KeySelector valueSelector, WindowAssigner window) {
-       HllSketchWindowAggregate<T> aggregateFunction = new HllSketchWindowAggregate(keySelector, valueSelector);
-       SingleOutputStreamOperator stream = input.keyBy(keySelector).window(window).aggregate(aggregateFunction);
-
-        return stream;
+        HllSketchWindowAggregate<T> aggregateFunction = new HllSketchWindowAggregate(keySelector, valueSelector);
+        return input.keyBy(keySelector).window(window).aggregate(aggregateFunction);
     }
 
     public static <T> DataStream<HllSketchAggregation> runContinuousWindowTheta(DataStream<T> input, KeySelector keySelector, KeySelector valueSelector, WindowAssigner window) {
         ThetaSketchWindowAggregate<T> aggregateFunction = new ThetaSketchWindowAggregate(keySelector, valueSelector);
-        SingleOutputStreamOperator stream = input.keyBy(keySelector).window(window).aggregate(aggregateFunction);
-        stream.print();
-        return stream;
+
+        return input.keyBy(keySelector).window(window).aggregate(aggregateFunction);
     }
 
     public static <T> DataStream<ThetaSketchAggregation> runContinuousTheta(DataStream<T> input, KeySelector keySelector, KeySelector valueSelector, int emitMin) {

@@ -1,10 +1,12 @@
 package de.lindener.streaming.approximate.queries.sources.adverts;
 
+import java.util.Date;
+
 /*
  * Adapted from https://github.com/chimpler/blog-spark-streaming-log-aggregation
  * */
 public class ImpressionLog {
-    private long timestamp;
+    private Date timestamp;
     private String publisher;
     private String advertiser;
     private String website;
@@ -16,7 +18,7 @@ public class ImpressionLog {
     }
 
 
-    public ImpressionLog(long timestamp, String publisher, String advertiser, String website, String geo, Double bid, String cookie) {
+    public ImpressionLog(Date timestamp, String publisher, String advertiser, String website, String geo, Double bid, String cookie) {
         this.timestamp = timestamp;
         this.publisher = publisher;
         this.advertiser = advertiser;
@@ -26,11 +28,11 @@ public class ImpressionLog {
         this.cookie = cookie;
     }
 
-    public long getTimestamp() {
+    public Date getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(long timestamp) {
+    public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
     }
 
