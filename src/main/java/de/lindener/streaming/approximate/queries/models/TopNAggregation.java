@@ -1,4 +1,4 @@
-package de.lindener.streaming.queries.models;
+package de.lindener.streaming.approximate.queries.models;
 
 import com.yahoo.sketches.frequencies.ErrorType;
 import com.yahoo.sketches.frequencies.ItemsSketch;

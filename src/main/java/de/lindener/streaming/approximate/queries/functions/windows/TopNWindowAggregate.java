@@ -1,8 +1,8 @@
-package de.lindener.streaming.queries.functions.windows;
+package de.lindener.streaming.approximate.queries.functions.windows;
 
 import com.yahoo.sketches.frequencies.ErrorType;
-import de.lindener.streaming.queries.models.TopNAggregation;
-import de.lindener.streaming.queries.models.TopNQueryResult;
+import de.lindener.streaming.approximate.queries.models.TopNAggregation;
+import de.lindener.streaming.approximate.queries.models.TopNQueryResult;
 import org.apache.flink.api.common.functions.AggregateFunction;
 import org.apache.flink.api.java.functions.KeySelector;
 
