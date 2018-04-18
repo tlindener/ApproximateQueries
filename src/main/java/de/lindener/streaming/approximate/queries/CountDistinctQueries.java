@@ -1,13 +1,12 @@
 package de.lindener.streaming.approximate.queries;
 
-import de.lindener.streaming.approximate.queries.models.ThetaSketchAggregation;
 import de.lindener.streaming.approximate.queries.functions.HllSketchFunction;
 import de.lindener.streaming.approximate.queries.functions.windows.HllSketchWindowAggregate;
 import de.lindener.streaming.approximate.queries.functions.windows.ThetaSketchWindowAggregate;
 import de.lindener.streaming.approximate.queries.models.HllSketchAggregation;
+import de.lindener.streaming.approximate.queries.models.ThetaSketchAggregation;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.windowing.assigners.WindowAssigner;
 
 public class CountDistinctQueries {
