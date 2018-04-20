@@ -1,4 +1,4 @@
-package de.lindener.streaming.approximate.queries.examples;
+package de.lindener.queries.streaming.experiments;
 
 import de.lindener.streaming.approximate.queries.sources.adverts.RandomAdvertGenerator;
 import de.lindener.streaming.approximate.queries.models.HllSketchAggregation;

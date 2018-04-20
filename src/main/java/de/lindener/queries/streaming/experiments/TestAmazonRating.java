@@ -1,9 +1,8 @@
 package de.lindener.queries.streaming.experiments;
 
-import de.lindener.streaming.approximate.queries.Queries;
 import de.lindener.streaming.approximate.queries.sources.amazon.AmazonReviewRating;
 import de.lindener.streaming.approximate.queries.sources.amazon.AmazonReviewRatingSource;
-import de.lindener.streaming.exact.queries.ExactFrequentItems;
+import de.lindener.streaming.exact.queries.ExactFrequentItemsFunction;
 import org.apache.flink.api.common.JobExecutionResult;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
@@ -41,7 +40,7 @@ public class TestAmazonRating {
 //            }
 //        }).print();
 //
-        ExactFrequentItems exactFrequentItems = new ExactFrequentItems(targetValueSelector,500);
+        ExactFrequentItemsFunction exactFrequentItems = new ExactFrequentItemsFunction(targetValueSelector, 500, 10000);
         inputStream.flatMap(exactFrequentItems);
 
 //        Queries.continuousTopN(inputStream,targetValueSelector,500);

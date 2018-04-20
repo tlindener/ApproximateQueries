@@ -10,30 +10,26 @@ import org.apache.flink.util.Collector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TopNSketchFunction<T> extends RichFlatMapFunction<T, TopNQueryResult> {
+public class TopNSketchFunction<IN, OUT> extends RichFlatMapFunction<IN, TopNQueryResult> {
     Logger LOG = LoggerFactory.getLogger(TopNSketchFunction.class);
 
-    private ItemsSketch<Object> sketch;
+    private ItemsSketch<OUT> sketch;
     private int sketchMapSize;
     private int emitMin;
     private int emitMinCounter = 0;
     private ErrorType errorType;
     private int topN;
-    KeySelector keySelector;
+    KeySelector<IN, OUT> keySelector;
 
-    public TopNSketchFunction(KeySelector keySelector, int topN) {
-        this(keySelector, topN, 64);
+    public TopNSketchFunction(KeySelector keySelector, int topN, int emitMin) {
+        this(keySelector, topN, emitMin, 64);
     }
 
-    public TopNSketchFunction(KeySelector keySelector, int topN, int sketchMapSize) {
-        this(keySelector, topN, sketchMapSize, ErrorType.NO_FALSE_POSITIVES, 1);
+    public TopNSketchFunction(KeySelector keySelector, int topN, int emitMin, int sketchMapSize) {
+        this(keySelector, topN, emitMin, sketchMapSize, ErrorType.NO_FALSE_NEGATIVES);
     }
 
-    public TopNSketchFunction(KeySelector keySelector, int topN, int sketchMapSize, ErrorType errorType) {
-        this(keySelector, topN, sketchMapSize, errorType, 1);
-    }
-
-    public TopNSketchFunction(KeySelector keySelector, int topN, int sketchMapSize, ErrorType errorType, int emitMin) {
+    public TopNSketchFunction(KeySelector keySelector, int topN, int emitMin, int sketchMapSize, ErrorType errorType) {
         this.keySelector = keySelector;
         this.topN = topN;
         this.sketchMapSize = sketchMapSize;
@@ -51,8 +47,8 @@ public class TopNSketchFunction<T> extends RichFlatMapFunction<T, TopNQueryResul
     }
 
     @Override
-    public void flatMap(T t, Collector<TopNQueryResult> collector) throws Exception {
-        Object value = keySelector.getKey(t);
+    public void flatMap(IN t, Collector<TopNQueryResult> collector) throws Exception {
+        OUT value = keySelector.getKey(t);
         sketch.update(value);
         emitMinCounter++;
         if (emitMin > 0 && emitMinCounter == emitMin) {

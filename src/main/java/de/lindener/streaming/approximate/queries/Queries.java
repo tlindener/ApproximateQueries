@@ -9,13 +9,13 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 
 public class Queries {
 
-    public static <T> DataStream<TopNQueryResult> continuousTopN(DataStream<T> inputStream, KeySelector valueSelector, int topN) {
-        TopNSketchFunction topNSketchFunction = new TopNSketchFunction(valueSelector, topN);
+    public static <ITEM, KEY> DataStream<TopNQueryResult> continuousTopN(DataStream<ITEM> inputStream, KeySelector valueSelector, int topN, int emitMin) {
+        TopNSketchFunction<ITEM, KEY> topNSketchFunction = new TopNSketchFunction(valueSelector, topN, emitMin);
         return inputStream.flatMap(topNSketchFunction);
     }
 
-    public static <T> DataStream<QuantileQueryResult> continuousQuantiles(DataStream<T> inputStream, KeySelector valueSelector) {
-        QuantileFunction quantileFunction = new QuantileFunction(valueSelector);
+    public static <T> DataStream<QuantileQueryResult> continuousQuantiles(DataStream<T> inputStream, KeySelector valueSelector, int emitMin) {
+        QuantileFunction quantileFunction = new QuantileFunction(valueSelector, emitMin);
         return inputStream.flatMap(quantileFunction);
     }
 }

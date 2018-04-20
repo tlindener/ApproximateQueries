@@ -24,8 +24,8 @@ public class QuantileFunction<T>
     KeySelector keySelector;
     private Comparator orderType;
 
-    public QuantileFunction(KeySelector keySelector) {
-        this(keySelector, 128, 100000, ErrorType.NO_FALSE_POSITIVES);
+    public QuantileFunction(KeySelector keySelector, int emitMin) {
+        this(keySelector, 128, emitMin, ErrorType.NO_FALSE_POSITIVES);
     }
 
     public QuantileFunction(KeySelector keySelector, int sketchMapSize, int emitMin) {

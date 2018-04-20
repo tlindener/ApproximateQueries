@@ -26,4 +26,10 @@ public class TopNQueryResult<T> {
         return result;
     }
 
+    @Override
+    public String toString() {
+        return "TopNQueryResult{" +
+                "resultList=" + resultList +
+                '}';
+    }
 }
