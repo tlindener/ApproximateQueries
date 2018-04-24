@@ -1,4 +1,4 @@
-package de.lindener.analysis;
+package de.lindener.analysis.amazon;
 
 import de.bytefish.jtinycsvparser.CsvParser;
 import de.bytefish.jtinycsvparser.CsvParserOptions;
