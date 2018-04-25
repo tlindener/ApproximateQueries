@@ -2,7 +2,7 @@ package de.lindener.streaming.approximate.queries.functions;
 
 import com.yahoo.sketches.frequencies.ErrorType;
 import com.yahoo.sketches.frequencies.ItemsSketch;
-import de.lindener.streaming.approximate.queries.models.TopNQueryResult;
+import de.lindener.streaming.approximate.queries.models.FrequentItemResult;
 import org.apache.flink.api.common.functions.RichFlatMapFunction;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.configuration.Configuration;
@@ -10,8 +10,8 @@ import org.apache.flink.util.Collector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TopNSketchFunction<IN, OUT> extends RichFlatMapFunction<IN, TopNQueryResult> {
-    Logger LOG = LoggerFactory.getLogger(TopNSketchFunction.class);
+public class FrequentItemSketchFunction<IN, OUT> extends RichFlatMapFunction<IN, FrequentItemResult> {
+    Logger LOG = LoggerFactory.getLogger(FrequentItemSketchFunction.class);
 
     private ItemsSketch<OUT> sketch;
     private int sketchMapSize;
@@ -21,15 +21,15 @@ public class TopNSketchFunction<IN, OUT> extends RichFlatMapFunction<IN, TopNQue
     private int topN;
     KeySelector<IN, OUT> keySelector;
 
-    public TopNSketchFunction(KeySelector keySelector, int topN, int emitMin) {
-        this(keySelector, topN, emitMin, 64);
+    public FrequentItemSketchFunction(KeySelector keySelector, int topN, int emitMin) {
+        this(keySelector, topN, emitMin, 128);
     }
 
-    public TopNSketchFunction(KeySelector keySelector, int topN, int emitMin, int sketchMapSize) {
-        this(keySelector, topN, emitMin, sketchMapSize, ErrorType.NO_FALSE_NEGATIVES);
+    public FrequentItemSketchFunction(KeySelector keySelector, int topN, int emitMin, int sketchMapSize) {
+        this(keySelector, topN, emitMin, sketchMapSize, ErrorType.NO_FALSE_POSITIVES);
     }
 
-    public TopNSketchFunction(KeySelector keySelector, int topN, int emitMin, int sketchMapSize, ErrorType errorType) {
+    public FrequentItemSketchFunction(KeySelector keySelector, int topN, int emitMin, int sketchMapSize, ErrorType errorType) {
         this.keySelector = keySelector;
         this.topN = topN;
         this.sketchMapSize = sketchMapSize;
@@ -47,12 +47,12 @@ public class TopNSketchFunction<IN, OUT> extends RichFlatMapFunction<IN, TopNQue
     }
 
     @Override
-    public void flatMap(IN t, Collector<TopNQueryResult> collector) throws Exception {
+    public void flatMap(IN t, Collector<FrequentItemResult> collector) throws Exception {
         OUT value = keySelector.getKey(t);
         sketch.update(value);
         emitMinCounter++;
         if (emitMin > 0 && emitMinCounter == emitMin) {
-            collector.collect(TopNQueryResult.fromSketch(sketch, errorType, topN));
+            collector.collect(FrequentItemResult.fromSketch(sketch, errorType, topN));
             emitMinCounter = 0;
         }
     }

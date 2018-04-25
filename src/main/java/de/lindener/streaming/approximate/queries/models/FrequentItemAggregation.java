@@ -3,15 +3,15 @@ package de.lindener.streaming.approximate.queries.models;
 import com.yahoo.sketches.frequencies.ErrorType;
 import com.yahoo.sketches.frequencies.ItemsSketch;
 
-public class TopNAggregation<T> {
+public class FrequentItemAggregation<T> {
 
     private ItemsSketch<T> itemsSketch;
 
-    public TopNAggregation() {
+    public FrequentItemAggregation() {
         this(64);
     }
 
-    public TopNAggregation(int mapSize) {
+    public FrequentItemAggregation(int mapSize) {
         itemsSketch = new ItemsSketch<>(mapSize);
     }
 
@@ -27,12 +27,12 @@ public class TopNAggregation<T> {
         itemsSketch.update(item);
     }
 
-    public TopNAggregation merge(TopNAggregation edgeValue) {
+    public FrequentItemAggregation merge(FrequentItemAggregation edgeValue) {
         this.itemsSketch.merge(edgeValue.getItemsSketch());
         return this;
     }
 
-    public TopNQueryResult<T> getResult(ErrorType type, int n) {
-        return TopNQueryResult.fromSketch(itemsSketch, type, n);
+    public FrequentItemResult<T> getResult(ErrorType type, int n) {
+        return FrequentItemResult.fromSketch(itemsSketch, type, n);
     }
 }

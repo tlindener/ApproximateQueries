@@ -36,7 +36,7 @@ public class ILFrequentItemsApproximate {
         env.setStreamTimeCharacteristic(TimeCharacteristic.ProcessingTime);
         DataStream<ImpressionLog> inputStream = env.addSource(new RandomAdvertGenerator(main.bound, main.websites, main.cookies));
         KeySelector valueSelector = (KeySelector<ImpressionLog, String>) impressionLog -> impressionLog.getAdvertiser();
-        Queries.continuousTopN(inputStream, valueSelector, main.top, main.emitMin).writeAsText(experiment.getResultPath());
+        Queries.continuousFrequentItems(inputStream, valueSelector, main.top, main.emitMin).writeAsText(experiment.getResultPath());
         JobExecutionResult result = env.execute("Approximate Query - ImpressionLog");
 
         experiment.setEndTime(LocalDateTime.now());

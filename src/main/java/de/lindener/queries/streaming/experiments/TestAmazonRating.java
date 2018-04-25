@@ -43,7 +43,7 @@ public class TestAmazonRating {
         ExactFrequentItemsFunction exactFrequentItems = new ExactFrequentItemsFunction(targetValueSelector, 500, 10000);
         inputStream.flatMap(exactFrequentItems);
 
-//        Queries.continuousTopN(inputStream,targetValueSelector,500);
+//        Queries.continuousFrequentItems(inputStream,targetValueSelector,500);
 
         JobExecutionResult result = env.execute("My Flink Job");
         System.out.println("The job took " + result.getNetRuntime(TimeUnit.SECONDS) + " to execute");

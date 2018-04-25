@@ -1,6 +1,5 @@
 package de.lindener.streaming.exact.queries;
 
-import de.lindener.streaming.approximate.queries.models.TopNQueryResult;
 import org.apache.flink.api.common.functions.RichFlatMapFunction;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.util.Collector;

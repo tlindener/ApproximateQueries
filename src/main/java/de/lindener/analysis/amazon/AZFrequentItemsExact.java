@@ -3,9 +3,6 @@ package de.lindener.analysis.amazon;
 import com.beust.jcommander.JCommander;
 import de.lindener.analysis.Experiment;
 import de.lindener.analysis.ExperimentType;
-import de.lindener.analysis.impressions.ILFIArgs;
-import de.lindener.streaming.approximate.queries.sources.adverts.ImpressionLog;
-import de.lindener.streaming.approximate.queries.sources.adverts.RandomAdvertGenerator;
 import de.lindener.streaming.approximate.queries.sources.amazon.AmazonReviewRating;
 import de.lindener.streaming.approximate.queries.sources.amazon.AmazonReviewRatingSource;
 import de.lindener.streaming.exact.queries.ExactFrequentItemsFunction;
@@ -37,7 +34,7 @@ public class AZFrequentItemsExact {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setStreamTimeCharacteristic(TimeCharacteristic.ProcessingTime);
         DataStream<AmazonReviewRating> inputStream = env.addSource(new AmazonReviewRatingSource("/media/data/approximatequeries/ratings.csv"));
-        KeySelector valueSelector = (KeySelector<AmazonReviewRating, String>) rating -> rating.getAsin();
+        KeySelector valueSelector = (KeySelector<AmazonReviewRating, String>) rating -> rating.getReviewerId();
         ExactFrequentItemsFunction exactFrequentItems = new ExactFrequentItemsFunction(valueSelector, main.top, main.emitMin);
         inputStream.flatMap(exactFrequentItems).writeAsText(experiment.getResultPath());
         JobExecutionResult result = env.execute();
