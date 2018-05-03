@@ -8,7 +8,7 @@ public class FrequentItemAggregation<T> {
     private ItemsSketch<T> itemsSketch;
 
     public FrequentItemAggregation() {
-        this(64);
+        this(4096 * 8);
     }
 
     public FrequentItemAggregation(int mapSize) {
@@ -32,7 +32,7 @@ public class FrequentItemAggregation<T> {
         return this;
     }
 
-    public FrequentItemResult<T> getResult(ErrorType type, int n) {
-        return FrequentItemResult.fromSketch(itemsSketch, type, n);
+    public FrequentItemResult<T> getResult(ErrorType type) {
+        return FrequentItemResult.fromSketch(itemsSketch, type);
     }
 }

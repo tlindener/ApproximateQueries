@@ -1,12 +1,15 @@
 package de.lindener.analysis.impressions;
 
 import com.beust.jcommander.JCommander;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.lindener.analysis.Experiment;
 import de.lindener.analysis.ExperimentType;
 import de.lindener.streaming.approximate.queries.Queries;
+import de.lindener.streaming.approximate.queries.models.FrequentItemResult;
 import de.lindener.streaming.approximate.queries.sources.adverts.ImpressionLog;
 import de.lindener.streaming.approximate.queries.sources.adverts.RandomAdvertGenerator;
 import org.apache.flink.api.common.JobExecutionResult;
+import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
@@ -34,9 +37,17 @@ public class ILFrequentItemsApproximate {
 
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setStreamTimeCharacteristic(TimeCharacteristic.ProcessingTime);
+        ObjectMapper mapper = new ObjectMapper();
+
         DataStream<ImpressionLog> inputStream = env.addSource(new RandomAdvertGenerator(main.bound, main.websites, main.cookies));
-        KeySelector valueSelector = (KeySelector<ImpressionLog, String>) impressionLog -> impressionLog.getAdvertiser();
-        Queries.continuousFrequentItems(inputStream, valueSelector, main.top, main.emitMin).writeAsText(experiment.getResultPath());
+        KeySelector valueSelector = (KeySelector<ImpressionLog, String>) impressionLog -> impressionLog.getWebsite();
+        Queries.continuousFrequentItems(inputStream, valueSelector, main.emitMin).map(new MapFunction<FrequentItemResult, String>() {
+            @Override
+            public String map(FrequentItemResult exactFrequentItemsResult) throws Exception {
+
+                return mapper.writeValueAsString(exactFrequentItemsResult);
+            }
+        }).writeAsText(experiment.getResultPath());
         JobExecutionResult result = env.execute("Approximate Query - ImpressionLog");
 
         experiment.setEndTime(LocalDateTime.now());

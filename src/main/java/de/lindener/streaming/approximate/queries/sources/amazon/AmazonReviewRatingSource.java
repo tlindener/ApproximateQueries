@@ -14,9 +14,16 @@ import java.util.stream.Stream;
 public class AmazonReviewRatingSource implements SourceFunction<AmazonReviewRating> {
     private volatile boolean isRunning = true;
     private String sourceFilePath;
+    private int bound = 0;
+    private int counter = 0;
 
     public AmazonReviewRatingSource(String sourceFilePath) {
         this.sourceFilePath = sourceFilePath;
+    }
+
+    public AmazonReviewRatingSource(String sourceFilePath, int bound) {
+        this.sourceFilePath = sourceFilePath;
+        this.bound = bound;
     }
 
     @Override
@@ -27,10 +34,13 @@ public class AmazonReviewRatingSource implements SourceFunction<AmazonReviewRati
 
             // We need to get an iterator, since the SourceFunction has to break out of its main loop on cancellation:
             Iterator<AmazonReviewRating> iterator = stream.iterator();
-
+//            if(bound != 0 && counter > bound){
+//               cancel();
+//            }
             // Make sure to cancel, when the Source function is canceled by an external event:
             while (isRunning && iterator.hasNext()) {
                 sourceContext.collect(iterator.next());
+                counter++;
             }
         }
     }

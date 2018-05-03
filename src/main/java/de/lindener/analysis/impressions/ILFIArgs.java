@@ -4,7 +4,7 @@ import com.beust.jcommander.Parameter;
 
 public class ILFIArgs {
     @Parameter(names = {"--bound", "-b"})
-    public int bound = 1000000000;
+    public int bound = 10000000;
     @Parameter(names = {"--cookies", "-c"})
     public int cookies = 10000;
     @Parameter(names = {"--websites", "-w"})

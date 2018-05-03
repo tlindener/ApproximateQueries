@@ -51,8 +51,8 @@ public class RandomAdvertGenerator implements SourceFunction<ImpressionLog> {
             Date timestamp = Calendar.getInstance().getTime();
             String publisher = publishers[rnd.nextInt(NumPublishers)];
             String advertiser = advertisers[rnd.nextInt(NumAdvertisers)];
-            String website = "website_" + rnd.nextInt(numWebsites) + ".com";
-            String cookie = "cookie_" + rnd.nextInt(numCookies);
+            String website = "website_" + nextSkewedBoundedDouble(0, numWebsites, numWebsites / 2, 10) + ".com";
+            String cookie = "cookie_" + nextSkewedBoundedDouble(0, numCookies, numCookies / 2, 10);
             String geo = Geos[rnd.nextInt(Geos.length)];
             Double bid = Math.abs(rnd.nextDouble()) % 1;
             ImpressionLog log = new ImpressionLog(timestamp, publisher, advertiser, website, geo, bid, cookie);
@@ -62,6 +62,14 @@ public class RandomAdvertGenerator implements SourceFunction<ImpressionLog> {
         }
     }
 
+    public double nextSkewedBoundedDouble(double min, double max, double skew, double bias) {
+        double range = max - min;
+        double mid = min + range / 2.0;
+        double unitGaussian = rnd.nextGaussian();
+        double biasFactor = Math.exp(bias);
+        Double retval = mid + (range * (biasFactor / (biasFactor + Math.exp(-unitGaussian / skew)) - 0.5));
+        return retval.intValue();
+    }
     @Override
     public void cancel() {
         isRunning = false;

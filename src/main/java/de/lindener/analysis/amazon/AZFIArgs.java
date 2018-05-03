@@ -4,15 +4,15 @@ import com.beust.jcommander.Parameter;
 
 public class AZFIArgs {
     @Parameter(names = {"--emit-min", "-e"})
-    public int emitMin = 1000;
-    @Parameter(names = {"--top", "-n"})
-    public int top = 100;
+    public int emitMin = 10000;
+    @Parameter(names = {"--bound", "-b"})
+    public int bound = 0;
 
     @Override
     public String toString() {
-        return "ILFIArgs{" +
-                ", emitMin=" + emitMin +
-                ", top=" + top +
+        return "AZFIArgs{" +
+                "emitMin=" + emitMin +
+                ", bound=" + bound +
                 '}';
     }
 }

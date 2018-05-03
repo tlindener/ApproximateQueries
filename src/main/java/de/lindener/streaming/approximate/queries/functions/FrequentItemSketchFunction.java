@@ -21,15 +21,15 @@ public class FrequentItemSketchFunction<IN, OUT> extends RichFlatMapFunction<IN,
     private int topN;
     KeySelector<IN, OUT> keySelector;
 
-    public FrequentItemSketchFunction(KeySelector keySelector, int topN, int emitMin) {
-        this(keySelector, topN, emitMin, 128);
+    public FrequentItemSketchFunction(KeySelector<IN, OUT> keySelector, int emitMin) {
+        this(keySelector, emitMin, 4096 * 16);
     }
 
-    public FrequentItemSketchFunction(KeySelector keySelector, int topN, int emitMin, int sketchMapSize) {
-        this(keySelector, topN, emitMin, sketchMapSize, ErrorType.NO_FALSE_POSITIVES);
+    public FrequentItemSketchFunction(KeySelector<IN, OUT> keySelector, int emitMin, int sketchMapSize) {
+        this(keySelector, emitMin, sketchMapSize, ErrorType.NO_FALSE_POSITIVES);
     }
 
-    public FrequentItemSketchFunction(KeySelector keySelector, int topN, int emitMin, int sketchMapSize, ErrorType errorType) {
+    public FrequentItemSketchFunction(KeySelector<IN, OUT> keySelector, int emitMin, int sketchMapSize, ErrorType errorType) {
         this.keySelector = keySelector;
         this.topN = topN;
         this.sketchMapSize = sketchMapSize;
@@ -52,7 +52,7 @@ public class FrequentItemSketchFunction<IN, OUT> extends RichFlatMapFunction<IN,
         sketch.update(value);
         emitMinCounter++;
         if (emitMin > 0 && emitMinCounter == emitMin) {
-            collector.collect(FrequentItemResult.fromSketch(sketch, errorType, topN));
+            collector.collect(FrequentItemResult.fromSketch(sketch, errorType));
             emitMinCounter = 0;
         }
     }

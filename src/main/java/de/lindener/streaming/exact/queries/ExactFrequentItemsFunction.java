@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
-public class ExactFrequentItemsFunction<T> extends RichFlatMapFunction<T, Map<Object, Long>> {
+public class ExactFrequentItemsFunction<T> extends RichFlatMapFunction<T, ExactFrequentItemsResult> {
     HashMap<Object, Long> frequentItems = new HashMap<>();
     KeySelector keySelector;
     int topN;
@@ -24,7 +24,7 @@ public class ExactFrequentItemsFunction<T> extends RichFlatMapFunction<T, Map<Ob
     }
 
     @Override
-    public void flatMap(T t, Collector<Map<Object, Long>> collector) throws Exception {
+    public void flatMap(T t, Collector<ExactFrequentItemsResult> collector) throws Exception {
         Object value = keySelector.getKey(t);
         if (frequentItems.containsKey(value)) {
             Long count = frequentItems.get(value);
@@ -35,7 +35,7 @@ public class ExactFrequentItemsFunction<T> extends RichFlatMapFunction<T, Map<Ob
         }
         emitMinCounter++;
         if (emitMin > 0 && emitMinCounter == emitMin) {
-            collector.collect(sortByValue(frequentItems, topN));
+            collector.collect(new ExactFrequentItemsResult(sortByValue(frequentItems, topN)));
             emitMinCounter = 0;
         }
 

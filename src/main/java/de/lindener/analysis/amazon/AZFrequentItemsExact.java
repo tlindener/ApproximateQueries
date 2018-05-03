@@ -1,12 +1,15 @@
 package de.lindener.analysis.amazon;
 
 import com.beust.jcommander.JCommander;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.lindener.analysis.Experiment;
 import de.lindener.analysis.ExperimentType;
 import de.lindener.streaming.approximate.queries.sources.amazon.AmazonReviewRating;
 import de.lindener.streaming.approximate.queries.sources.amazon.AmazonReviewRatingSource;
 import de.lindener.streaming.exact.queries.ExactFrequentItemsFunction;
+import de.lindener.streaming.exact.queries.ExactFrequentItemsResult;
 import org.apache.flink.api.common.JobExecutionResult;
+import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
@@ -33,10 +36,19 @@ public class AZFrequentItemsExact {
 
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setStreamTimeCharacteristic(TimeCharacteristic.ProcessingTime);
-        DataStream<AmazonReviewRating> inputStream = env.addSource(new AmazonReviewRatingSource("/media/data/approximatequeries/ratings.csv"));
+        ObjectMapper mapper = new ObjectMapper();
+
+        DataStream<AmazonReviewRating> inputStream = env.addSource(new AmazonReviewRatingSource("/media/data/approximatequeries/ratings.csv", main.bound));
         KeySelector valueSelector = (KeySelector<AmazonReviewRating, String>) rating -> rating.getReviewerId();
-        ExactFrequentItemsFunction exactFrequentItems = new ExactFrequentItemsFunction(valueSelector, main.top, main.emitMin);
-        inputStream.flatMap(exactFrequentItems).writeAsText(experiment.getResultPath());
+        ExactFrequentItemsFunction exactFrequentItems = new ExactFrequentItemsFunction(valueSelector, 20, main.emitMin);
+        inputStream.flatMap(exactFrequentItems).map(new MapFunction<ExactFrequentItemsResult, String>() {
+            @Override
+            public String map(ExactFrequentItemsResult exactFrequentItemsResult) throws Exception {
+
+                return mapper.writeValueAsString(exactFrequentItemsResult);
+            }
+        }).writeAsText(experiment.getResultPath());
+
         JobExecutionResult result = env.execute();
 
         experiment.setEndTime(LocalDateTime.now());

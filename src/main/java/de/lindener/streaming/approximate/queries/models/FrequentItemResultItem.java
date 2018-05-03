@@ -13,6 +13,38 @@ public class FrequentItemResultItem<T> {
         this.upperBound = upperBound;
     }
 
+    public T getItem() {
+        return item;
+    }
+
+    public void setItem(T item) {
+        this.item = item;
+    }
+
+    public long getEstimate() {
+        return estimate;
+    }
+
+    public void setEstimate(long estimate) {
+        this.estimate = estimate;
+    }
+
+    public long getLowerBound() {
+        return lowerBound;
+    }
+
+    public void setLowerBound(long lowerBound) {
+        this.lowerBound = lowerBound;
+    }
+
+    public long getUpperBound() {
+        return upperBound;
+    }
+
+    public void setUpperBound(long upperBound) {
+        this.upperBound = upperBound;
+    }
+
     @Override
     public String toString() {
         return "FrequentItemResultItem{" +
@@ -22,4 +54,5 @@ public class FrequentItemResultItem<T> {
                 ", upperBound=" + upperBound +
                 '}';
     }
+
 }

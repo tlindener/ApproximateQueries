@@ -9,11 +9,9 @@ import org.apache.flink.api.java.functions.KeySelector;
 public class FrequentItemsWindowAggregate<T> implements AggregateFunction<T, FrequentItemAggregation, FrequentItemResult> {
     private KeySelector valueSelector;
     private ErrorType type;
-    private int numResults;
 
-    public FrequentItemsWindowAggregate(KeySelector valueSelector, int numResults, ErrorType type) {
+    public FrequentItemsWindowAggregate(KeySelector valueSelector, ErrorType type) {
         this.valueSelector = valueSelector;
-        this.numResults = numResults;
         this.type = type;
     }
 
@@ -30,7 +28,7 @@ public class FrequentItemsWindowAggregate<T> implements AggregateFunction<T, Fre
 
     @Override
     public FrequentItemResult<T> getResult(FrequentItemAggregation frequentItemAggregation) {
-        return frequentItemAggregation.getResult(type, numResults);
+        return frequentItemAggregation.getResult(type);
     }
 
     @Override
