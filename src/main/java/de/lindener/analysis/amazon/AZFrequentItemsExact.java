@@ -42,7 +42,7 @@ public class AZFrequentItemsExact {
         DataStream<AmazonReviewRating> inputStream = env.addSource(new AmazonReviewRatingSource(Constants.ANALYSIS_AZ_PATH, main.bound));
         KeySelector valueSelector = (KeySelector<AmazonReviewRating, String>) rating -> rating.getReviewerId();
         ExactFrequentItemsFunction exactFrequentItems = new ExactFrequentItemsFunction(valueSelector, 20, main.emitMin);
-        inputStream.flatMap(exactFrequentItems).map(new MapFunction<ExactFrequentItemsResult, String>() {
+        inputStream.keyBy(valueSelector).flatMap(exactFrequentItems).map(new MapFunction<ExactFrequentItemsResult, String>() {
             @Override
             public String map(ExactFrequentItemsResult exactFrequentItemsResult) throws Exception {
 

@@ -6,7 +6,7 @@ public class AZFIArgs {
     @Parameter(names = {"--emit-min", "-e"})
     public int emitMin = 0;
     @Parameter(names = {"--bound", "-b"})
-    public int bound = 0;
+    public int bound = 10000;
 
     @Override
     public String toString() {

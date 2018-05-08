@@ -2,7 +2,9 @@ package de.lindener.streaming.exact.queries;
 
 import org.apache.flink.api.common.functions.RichFlatMapFunction;
 import org.apache.flink.api.common.state.MapState;
+import org.apache.flink.api.common.state.MapStateDescriptor;
 import org.apache.flink.api.java.functions.KeySelector;
+import org.apache.flink.configuration.Configuration;
 import org.apache.flink.util.Collector;
 
 import java.util.LinkedHashMap;
@@ -23,6 +25,12 @@ public class ExactFrequentItemsFunction<T> extends RichFlatMapFunction<T, ExactF
         this.keySelector = keySelector;
         this.topN = topN;
         this.emitMin = emitMin;
+    }
+
+    @Override
+    public void open(Configuration parameters) throws Exception {
+        MapStateDescriptor<Object, Long> descriptor = new MapStateDescriptor<Object, Long>("sketchMapState", Object.class, Long.class);
+        frequentItems = getRuntimeContext().getMapState(descriptor);
     }
 
     @Override
