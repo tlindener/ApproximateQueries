@@ -4,7 +4,7 @@ import com.beust.jcommander.Parameter;
 
 public class AZFIArgs {
     @Parameter(names = {"--emit-min", "-e"})
-    public int emitMin = 10000;
+    public int emitMin = 0;
     @Parameter(names = {"--bound", "-b"})
     public int bound = 0;
 

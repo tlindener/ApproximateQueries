@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.lindener.analysis.Constants;
 import de.lindener.analysis.Experiment;
 import de.lindener.analysis.ExperimentType;
-import de.lindener.streaming.approximate.queries.Queries;
-import de.lindener.streaming.approximate.queries.models.FrequentItemResult;
+import de.lindener.streaming.approximate.queries.CountDistinctQueries;
+import de.lindener.streaming.approximate.queries.models.HllSketchAggregation;
 import de.lindener.streaming.approximate.queries.sources.amazon.AmazonReviewRating;
 import de.lindener.streaming.approximate.queries.sources.amazon.AmazonReviewRatingSource;
 import org.apache.flink.api.common.JobExecutionResult;
@@ -19,8 +19,7 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
 
-public class AZFrequentItemsApproximate {
-
+public class AZHllApproximate {
     public static void main(String... argv) throws Exception {
         AZFIArgs main = new AZFIArgs();
         JCommander.newBuilder()
@@ -42,12 +41,13 @@ public class AZFrequentItemsApproximate {
         //mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 
         DataStream<AmazonReviewRating> inputStream = env.addSource(new AmazonReviewRatingSource(Constants.ANALYSIS_AZ_PATH, main.bound));
-        KeySelector valueSelector = (KeySelector<AmazonReviewRating, Double>) rating -> rating.getRating();
-        Queries.continuousFrequentItems(inputStream, valueSelector, main.emitMin).map(new MapFunction<FrequentItemResult, String>() {
+        KeySelector keySelector = (KeySelector<AmazonReviewRating, Double>) rating -> rating.getRating();
+        KeySelector valueSelector = (KeySelector<AmazonReviewRating, String>) rating -> rating.getReviewerId();
+        CountDistinctQueries.runContinuousHll(inputStream, keySelector, valueSelector, main.emitMin).map(new MapFunction<HllSketchAggregation, String>() {
             @Override
-            public String map(FrequentItemResult exactFrequentItemsResult) throws Exception {
+            public String map(HllSketchAggregation input) throws Exception {
 
-                return mapper.writeValueAsString(exactFrequentItemsResult);
+                return mapper.writeValueAsString(input);
             }
         }).writeAsText(experiment.getResultPath());
         JobExecutionResult result = env.execute();

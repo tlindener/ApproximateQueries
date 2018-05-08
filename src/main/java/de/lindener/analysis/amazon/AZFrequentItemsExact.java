@@ -2,6 +2,7 @@ package de.lindener.analysis.amazon;
 
 import com.beust.jcommander.JCommander;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.lindener.analysis.Constants;
 import de.lindener.analysis.Experiment;
 import de.lindener.analysis.ExperimentType;
 import de.lindener.streaming.approximate.queries.sources.amazon.AmazonReviewRating;
@@ -38,7 +39,7 @@ public class AZFrequentItemsExact {
         env.setStreamTimeCharacteristic(TimeCharacteristic.ProcessingTime);
         ObjectMapper mapper = new ObjectMapper();
 
-        DataStream<AmazonReviewRating> inputStream = env.addSource(new AmazonReviewRatingSource("/media/data/approximatequeries/ratings.csv", main.bound));
+        DataStream<AmazonReviewRating> inputStream = env.addSource(new AmazonReviewRatingSource(Constants.ANALYSIS_AZ_PATH, main.bound));
         KeySelector valueSelector = (KeySelector<AmazonReviewRating, String>) rating -> rating.getReviewerId();
         ExactFrequentItemsFunction exactFrequentItems = new ExactFrequentItemsFunction(valueSelector, 20, main.emitMin);
         inputStream.flatMap(exactFrequentItems).map(new MapFunction<ExactFrequentItemsResult, String>() {
