@@ -19,6 +19,10 @@ jar_file = 'java -cp ' + os.path.dirname(os.path.abspath(__file__)) + '\\target\
 package_az_fi_apprx = 'de.lindener.analysis.amazon.AZFrequentItemsApproximate'
 package_az_fi_exact = 'de.lindener.analysis.amazon.AZFrequentItemsExact'
 package_az_hll_apprx = 'de.lindener.analysis.amazon.AZHllApproximate'
+
+package_il_fi_apprx = 'de.lindener.analysis.impressions.ILFrequentItemsApproximate'
+package_il_fi_exact = 'de.lindener.analysis.impressions.ILFrequentItemsExact'
+
 map_sizes = [256, 1024, 2048, 4096]
 
 
@@ -35,7 +39,7 @@ def runAZFIApprx(emit_min=1000, bound=0, map_size=128):
 def runILFIApprx(emit_min=1000, bound=10000000, map_size=128):
     args = ['--emit-min', str(emit_min), '--bound', str(bound), '--map-size', str(map_size)]
     start = time.time()
-    result = jarWrapper(package_az_fi_apprx, args)
+    result = jarWrapper(package_il_fi_apprx, args)
     end = time.time()
     result = json.loads(result)
     runtime = end - start
