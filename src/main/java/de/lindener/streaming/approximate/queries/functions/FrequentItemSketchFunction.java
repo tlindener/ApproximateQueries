@@ -25,7 +25,7 @@ public class FrequentItemSketchFunction<IN, OUT> extends RichFlatMapFunction<IN,
     KeySelector<IN, OUT> keySelector;
 
     public FrequentItemSketchFunction(KeySelector<IN, OUT> keySelector, int emitMin) {
-        this(keySelector, emitMin, 4096 * 16);
+        this(keySelector, emitMin, 4096);
     }
 
     public FrequentItemSketchFunction(KeySelector<IN, OUT> keySelector, int emitMin, int sketchMapSize) {

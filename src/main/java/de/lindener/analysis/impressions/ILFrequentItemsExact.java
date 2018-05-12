@@ -43,5 +43,6 @@ public class ILFrequentItemsExact {
         experiment.setRuntime(result.getNetRuntime(TimeUnit.SECONDS));
         experiment.storeExperiment();
         System.out.println("The job took " + result.getNetRuntime(TimeUnit.SECONDS) + " seconds to execute");
+        System.out.println(experiment.toString());
     }
 }

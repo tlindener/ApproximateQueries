@@ -1,7 +1,6 @@
 package de.lindener.analysis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.flink.api.common.JobExecutionResult;
 
 import java.io.File;
 import java.io.IOException;
@@ -74,6 +73,17 @@ public class Experiment {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public String toString() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.writeValueAsString(this);
+        } catch (IOException e) {
+            return e.toString();
+        }
+
     }
 
     public void setRuntime(long netRuntime) {

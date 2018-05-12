@@ -41,7 +41,7 @@ public class ILFrequentItemsApproximate {
 
         DataStream<ImpressionLog> inputStream = env.addSource(new RandomAdvertGenerator(main.bound, main.websites, main.cookies));
         KeySelector valueSelector = (KeySelector<ImpressionLog, String>) impressionLog -> impressionLog.getWebsite();
-        Queries.continuousFrequentItems(inputStream, valueSelector, main.emitMin).map(new MapFunction<FrequentItemResult, String>() {
+        Queries.continuousFrequentItems(inputStream, valueSelector, main.emitMin, main.mapSize).map(new MapFunction<FrequentItemResult, String>() {
             @Override
             public String map(FrequentItemResult exactFrequentItemsResult) throws Exception {
 
@@ -54,5 +54,6 @@ public class ILFrequentItemsApproximate {
         experiment.setRuntime(result.getNetRuntime(TimeUnit.SECONDS));
         experiment.storeExperiment();
         System.out.println("The job took " + result.getNetRuntime(TimeUnit.SECONDS) + " seconds to execute");
+        System.out.println(experiment.toString());
     }
 }

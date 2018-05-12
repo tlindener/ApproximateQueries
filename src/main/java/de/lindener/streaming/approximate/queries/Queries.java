@@ -9,8 +9,8 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 
 public class Queries {
 
-    public static <ITEM, KEY> DataStream<FrequentItemResult> continuousFrequentItems(DataStream<ITEM> inputStream, KeySelector valueSelector, int emitMin) {
-        FrequentItemSketchFunction<ITEM, KEY> frequentItemSketchFunction = new FrequentItemSketchFunction(valueSelector, emitMin);
+    public static <ITEM, KEY> DataStream<FrequentItemResult> continuousFrequentItems(DataStream<ITEM> inputStream, KeySelector valueSelector, int emitMin, int mapSize) {
+        FrequentItemSketchFunction<ITEM, KEY> frequentItemSketchFunction = new FrequentItemSketchFunction(valueSelector, emitMin, mapSize);
         return inputStream.keyBy(valueSelector).flatMap(frequentItemSketchFunction);
     }
 

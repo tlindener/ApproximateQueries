@@ -43,7 +43,7 @@ public class AZFrequentItemsApproximate {
 
         DataStream<AmazonReviewRating> inputStream = env.addSource(new AmazonReviewRatingSource(Constants.ANALYSIS_AZ_PATH, main.bound));
         KeySelector valueSelector = (KeySelector<AmazonReviewRating, Double>) rating -> rating.getRating();
-        Queries.continuousFrequentItems(inputStream, valueSelector, main.emitMin).map(new MapFunction<FrequentItemResult, String>() {
+        Queries.continuousFrequentItems(inputStream, valueSelector, main.emitMin, main.mapSize).map(new MapFunction<FrequentItemResult, String>() {
             @Override
             public String map(FrequentItemResult exactFrequentItemsResult) throws Exception {
 
@@ -56,5 +56,6 @@ public class AZFrequentItemsApproximate {
         experiment.setRuntime(result.getNetRuntime(TimeUnit.SECONDS));
         experiment.storeExperiment();
         System.out.println("The job took " + result.getNetRuntime(TimeUnit.SECONDS) + " seconds to execute");
+        System.out.println(experiment.toString());
     }
 }
