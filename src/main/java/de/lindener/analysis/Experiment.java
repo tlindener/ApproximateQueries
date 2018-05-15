@@ -9,7 +9,9 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class Experiment {
-
+    public Experiment() {
+        this.resultPath = new StringBuilder().append(Constants.ANALYSIS_RESULTS_BASE).append(this.type).append('/').append(LocalDateTime.now().toString().replace(":", "-")).toString();
+    }
 
     public LocalDateTime getStartTime() {
         return startTime;
@@ -52,7 +54,6 @@ public class Experiment {
     }
 
     public String getResultPath() {
-        this.resultPath = new StringBuilder().append(Constants.ANALYSIS_RESULTS_BASE).append(this.type).append('/').append(LocalDateTime.now().toString().replace(":", "-")).toString();
         return resultPath;
     }
 
