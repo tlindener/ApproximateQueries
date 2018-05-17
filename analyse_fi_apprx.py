@@ -9,7 +9,8 @@ def file_is_empty(path):
 
 
 def process_file_fi(path, name):
-    fieldnames = ["experimentNum", "runtime", "thread", "emitNum", "estimate", "item", "lowerBound", "upperBound"]
+    fieldnames = ["experimentNum", "runtime", "thread", "emitNum", "estimate", "item", "lowerBound", "upperBound",
+                  "mapSize"]
     with open(name, 'w', newline='') as csv_write_file:
         print("Opened file")
         with open(path, newline='') as csvfile:
@@ -17,7 +18,7 @@ def process_file_fi(path, name):
             writer = csv.DictWriter(csv_write_file, fieldnames=fieldnames)
             writer.writeheader()
             for row in reader:
-                print(reader.line_num)
+                print(reader.line_num - 1)
                 print(row['resultPath'])
                 result_files = glob.glob(row['resultPath'] + '\*')
                 for thread, file in enumerate(result_files, 1):
@@ -29,11 +30,11 @@ def process_file_fi(path, name):
                                     if 'resultList' in parsed_line:
                                         for i, result_item in enumerate(parsed_line['resultList']):
                                             writer.writerow(
-                                                {'runtime': row['runtime'], 'experimentNum': reader.line_num,
+                                                {'runtime': row['runtime'], 'experimentNum': reader.line_num - 1,
                                                  "thread": thread, 'emitNum': line_number, "item": result_item['item'],
                                                  "estimate": result_item['estimate'],
                                                  "lowerBound": result_item['lowerBound'],
-                                                 "upperBound": result_item['upperBound']})
+                                                 "upperBound": result_item['upperBound'], "mapSize": row['mapSize']})
 
 
 def process_file_fi_exact(path, name):
@@ -45,7 +46,7 @@ def process_file_fi_exact(path, name):
             writer = csv.DictWriter(csv_write_file, fieldnames=fieldnames)
             writer.writeheader()
             for row in reader:
-                print(reader.line_num)
+                print(reader.line_num - 1)
                 print(row['resultPath'])
                 result_files = glob.glob(row['resultPath'] + '\*')
                 for thread, file in enumerate(result_files, 1):
@@ -57,11 +58,11 @@ def process_file_fi_exact(path, name):
                                     if 'resultList' in parsed_line:
                                         for i, result_item in enumerate(parsed_line['frequentItems']):
                                             writer.writerow(
-                                                {'runtime': row['runtime'], 'experimentNum': reader.line_num,
+                                                {'runtime': row['runtime'], 'experimentNum': reader.line_num - 1,
                                                  "thread": thread, 'emitNum': line_number, "item": result_item,
                                                  "estimate": parsed_line['frequentItems'][result_item]})
 
 
-# process_file_fi('AZFI_APPRX.csv','AZFI_APPRX_Processed.csv')
+process_file_fi('AZFI_APPRX.csv', 'AZFI_APPRX_Processed.csv')
 # process_file_fi('ILFI_APPRX.csv','ILFI_APPRX_Processed.csv')
-process_file_fi_exact('AZFI_EXACT.csv', 'AZFI_EXACT_Processed.csv')
+# process_file_fi_exact('AZFI_EXACT.csv', 'AZFI_EXACT_Processed.csv')

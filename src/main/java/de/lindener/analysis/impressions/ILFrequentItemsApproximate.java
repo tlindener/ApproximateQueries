@@ -30,8 +30,7 @@ public class ILFrequentItemsApproximate {
     }
 
     public static void run(ILFIArgs main) throws Exception {
-        Experiment experiment = new Experiment();
-        experiment.setType(ExperimentType.IL_FI_Approximate);
+        Experiment experiment = new Experiment(ExperimentType.IL_FI_Approximate);
         experiment.setSettings(main.toString());
         experiment.setStartTime(LocalDateTime.now());
 

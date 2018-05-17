@@ -30,8 +30,7 @@ public class AZFrequentItemsExact {
     }
 
     public static void run(AZFIArgs main) throws Exception {
-        Experiment experiment = new Experiment();
-        experiment.setType(ExperimentType.AR_FI_Exact);
+        Experiment experiment = new Experiment(ExperimentType.AR_FI_Exact);
         experiment.setSettings(main.toString());
         experiment.setStartTime(LocalDateTime.now());
 

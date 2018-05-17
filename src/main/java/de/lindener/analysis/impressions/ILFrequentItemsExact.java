@@ -26,8 +26,7 @@ public class ILFrequentItemsExact {
     }
 
     public static void run(ILFIArgs main) throws Exception {
-        Experiment experiment = new Experiment();
-        experiment.setType(ExperimentType.IL_FI_Exact);
+        Experiment experiment = new Experiment(ExperimentType.IL_FI_Exact);
         experiment.setSettings(main.toString());
         experiment.setStartTime(LocalDateTime.now());
 

@@ -31,8 +31,7 @@ public class AZFrequentItemsApproximate {
     }
 
     public static void run(AZFIArgs main) throws Exception {
-        Experiment experiment = new Experiment();
-        experiment.setType(ExperimentType.AR_FI_Approximate);
+        Experiment experiment = new Experiment(ExperimentType.AR_FI_Approximate);
         experiment.setSettings(main.toString());
         experiment.setStartTime(LocalDateTime.now());
 
