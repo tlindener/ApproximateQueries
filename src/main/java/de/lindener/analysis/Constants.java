@@ -6,6 +6,6 @@ public class Constants {
     //public static String ANALYSIS_RESULTS_BASE = "/media/data/approximatequeries/";
     public static String ANALYSIS_RESULTS_BASE = "C:\\Users\\tobias\\Desktop\\projects\\queries\\results\\";
     public static String ANALYSIS_AZ_PATH = "C:\\Users\\tobias\\Desktop\\projects\\queries\\data\\ratings.csv";
-    public static String ANALYSIS_WT_PATH = "C:\\Users\\tobias\\Desktop\\projects\\queries\\data\\wiki_1190153705";
+    public static String ANALYSIS_WT_PATH = "C:\\Users\\tobias\\Desktop\\projects\\queries\\data\\wiki";
     // public static String ANALYSIS_AZ_PATH = "/media/data/approximatequeries/ratings.csv";
 }

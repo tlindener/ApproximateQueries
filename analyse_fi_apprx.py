@@ -63,6 +63,7 @@ def process_file_fi_exact(path, name):
                                                  "estimate": parsed_line['frequentItems'][result_item]})
 
 
-process_file_fi('AZFI_APPRX.csv', 'AZFI_APPRX_Processed.csv')
+process_file_fi('WTFI_APPRX.csv', 'WT_FI_APPRX_Processed.csv')
+# process_file_fi('AZFI_APPRX.csv', 'AZFI_APPRX_Processed.csv')
 # process_file_fi('ILFI_APPRX.csv','ILFI_APPRX_Processed.csv')
 # process_file_fi_exact('AZFI_EXACT.csv', 'AZFI_EXACT_Processed.csv')
