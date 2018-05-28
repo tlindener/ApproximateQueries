@@ -39,8 +39,8 @@ public class AZFrequentItemsExact {
         ObjectMapper mapper = new ObjectMapper();
 
         DataStream<AmazonReviewRating> inputStream = env.addSource(new AmazonReviewRatingSource(Constants.ANALYSIS_AZ_PATH, main.bound));
-        KeySelector valueSelector = (KeySelector<AmazonReviewRating, String>) rating -> rating.getReviewerId();
-        ExactFrequentItemsFunction exactFrequentItems = new ExactFrequentItemsFunction(valueSelector, 20, main.emitMin);
+        KeySelector valueSelector = (KeySelector<AmazonReviewRating, Double>) rating -> rating.getRating();
+        ExactFrequentItemsFunction exactFrequentItems = new ExactFrequentItemsFunction(valueSelector, 1000, main.emitMin);
         inputStream.keyBy(valueSelector).flatMap(exactFrequentItems).map(new MapFunction<ExactFrequentItemsResult, String>() {
             @Override
             public String map(ExactFrequentItemsResult exactFrequentItemsResult) throws Exception {

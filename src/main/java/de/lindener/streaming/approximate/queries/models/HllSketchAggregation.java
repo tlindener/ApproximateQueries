@@ -92,6 +92,12 @@ public class HllSketchAggregation implements Serializable {
                 '}';
     }
 
+    public HllEstimateResult getResult(){
+        return new HllEstimateResult(sketchMap.entrySet().stream().map(x -> {
+            return new HllEstimate(x.getKey(),x.getValue().getEstimate());
+        }).collect(Collectors.toList()));
+    }
+
     public HllSketchAggregation merge(HllSketchAggregation edgeValue) {
 //        LOG.info("HllSketchAggregation");
         System.out.println("HllSketchAggregation - merge");

@@ -30,7 +30,7 @@ public class AZHllApproximate {
     }
 
     public static void run(AZFIArgs main) throws Exception {
-        Experiment experiment = new Experiment(ExperimentType.AR_FI_Approximate);
+        Experiment experiment = new Experiment(ExperimentType.AR_HLL_APPROXIMATE);
         experiment.setSettings(main.toString());
         experiment.setStartTime(LocalDateTime.now());
 
@@ -40,13 +40,13 @@ public class AZHllApproximate {
         //mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 
         DataStream<AmazonReviewRating> inputStream = env.addSource(new AmazonReviewRatingSource(Constants.ANALYSIS_AZ_PATH, main.bound));
-        KeySelector keySelector = (KeySelector<AmazonReviewRating, Double>) rating -> rating.getRating();
+        KeySelector keySelector = (KeySelector<AmazonReviewRating, String>) rating -> rating.getAsin();
         KeySelector valueSelector = (KeySelector<AmazonReviewRating, String>) rating -> rating.getReviewerId();
         CountDistinctQueries.runContinuousHll(inputStream, keySelector, valueSelector, main.emitMin).map(new MapFunction<HllSketchAggregation, String>() {
             @Override
             public String map(HllSketchAggregation input) throws Exception {
 
-                return mapper.writeValueAsString(input);
+                return mapper.writeValueAsString(input.getResult());
             }
         }).writeAsText(experiment.getResultPath());
         JobExecutionResult result = env.execute();
