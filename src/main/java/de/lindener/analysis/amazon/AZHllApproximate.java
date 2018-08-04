@@ -39,7 +39,7 @@ public class AZHllApproximate {
         ObjectMapper mapper = new ObjectMapper();
         //mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 
-        DataStream<AmazonReviewRating> inputStream = env.addSource(new AmazonReviewRatingSource(Constants.ANALYSIS_AZ_PATH, main.bound));
+        DataStream<AmazonReviewRating> inputStream = env.addSource(new AmazonReviewRatingSource(Constants.ANALYSIS_AZ_PATH_P, main.bound));
         KeySelector keySelector = (KeySelector<AmazonReviewRating, String>) rating -> rating.getAsin();
         KeySelector valueSelector = (KeySelector<AmazonReviewRating, String>) rating -> rating.getReviewerId();
         CountDistinctQueries.runContinuousHll(inputStream, keySelector, valueSelector, main.emitMin).map(new MapFunction<HllSketchAggregation, String>() {

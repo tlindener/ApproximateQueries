@@ -1,7 +1,8 @@
-import csv
-import glob
 import json
 import os
+
+import csv
+import glob
 
 
 def file_is_empty(path):
@@ -94,4 +95,5 @@ def process_file_hll(path, name):
 #process_file_fi('AZFI_APPRX.csv', 'AZFI_APPRX_Rating_Processed.csv')
 #process_file_fi('ILFI_APPRX.csv','ILFI_APPRX_Processed.csv')
 #process_file_fi_exact('AZFI_EXACT.csv', 'AZFI_EXACT_Rating_Processed.csv')
-process_file_hll('AZHLL_APPRX.csv','AZHLL_APPRX_REVIEWER_PRODUCT_processed.csv')
+# process_file_hll('HLL_APPRX.csv', 'HLL_APPRX_REVIEWER_PRODUCT_processed.csv')
+process_file_fi('WTFI_APPRX.csv', 'WTFI_APPRX_URL_PROCESSED.csv')

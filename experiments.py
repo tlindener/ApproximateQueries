@@ -1,14 +1,15 @@
-import csv
 import json
 import os
 import time
+
+import csv
 from subprocess import *
 
 
 def jarWrapper(package, args):
     last_line = ''
-    with Popen(['java', '-Xmx4G', '-cp',
-                os.path.dirname(os.path.abspath(__file__)) + '\\target\\queries-1.0-SNAPSHOT-shaded.jar',
+    with Popen(['java', '-Xmx10G', '-cp',
+                os.path.dirname(os.path.abspath(__file__)) + '/target/queries-1.0-SNAPSHOT.jar',
                 package] + list(args), stdout=PIPE, bufsize=1, universal_newlines=True) as p:
         for line in p.stdout:
             last_line = line
@@ -24,7 +25,7 @@ package_wt_fi_apprx = 'de.lindener.analysis.wikitrace.WTFrequentItemsApproximate
 package_il_fi_apprx = 'de.lindener.analysis.impressions.ILFrequentItemsApproximate'
 package_il_fi_exact = 'de.lindener.analysis.impressions.ILFrequentItemsExact'
 
-map_sizes = [128, 1024, 4096, 16384]
+map_sizes = [16384, 32768, 65536, 131072]
 
 
 def runAZFIApprx(emit_min=1000, bound=0, map_size=128):
@@ -75,13 +76,31 @@ def runILFIApprx(emit_min=1000, bound=10000000, map_size=128):
     return {'mapSize': map_size, 'runtime': runtime, 'resultPath': result['resultPath']}
 
 
+def runHLLApprx(emit_min=1000):
+    args = ['--emit-min', str(emit_min)]
+    start = time.time()
+    result = jarWrapper(package_az_hll_apprx, args)
+    end = time.time()
+    result = json.loads(result)
+    runtime = end - start
+    return {'runtime': runtime, 'resultPath': result['resultPath']}
+
+
+def runHLLTests():
+    fieldnames = ['runtime', 'resultPath']
+    with open('HLL_APPRX.csv', 'w', newline='') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+        result = runHLLApprx(emit_min=10000)
+        writer.writerow(result)
+
 def runFITests():
     fieldnames = ['mapSize', 'runtime', 'resultPath']
     with open('WTFI_APPRX.csv', 'w', newline='') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
         for mapSize in map_sizes:
-            result = runWTFIApprx(map_size=mapSize)
+            result = runWTFIApprx(emit_min=10000, map_size=mapSize)
             writer.writerow(result)
 
     # with open('AZFI_APPRX.csv', 'w', newline='') as csvfile:
@@ -112,3 +131,4 @@ def runFITests():
 
 
 runFITests()
+# runHLLTests()
