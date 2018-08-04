@@ -3,7 +3,6 @@ package de.lindener.streaming.approximate.queries.functions;
 import com.yahoo.sketches.hll.TgtHllType;
 import de.lindener.streaming.approximate.queries.models.HllSketchAggregation;
 import org.apache.flink.api.common.functions.RichFlatMapFunction;
-import org.apache.flink.api.common.state.ListState;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.util.Collector;
@@ -12,8 +11,6 @@ import org.slf4j.LoggerFactory;
 
 public class HllSketchFunction<T> extends RichFlatMapFunction<T, HllSketchAggregation> {
     Logger LOG = LoggerFactory.getLogger(HllSketchFunction.class);
-
-
     private KeySelector keySelector;
     private KeySelector aggregateSelector;
     private HllSketchAggregation aggregation;
@@ -21,9 +18,6 @@ public class HllSketchFunction<T> extends RichFlatMapFunction<T, HllSketchAggreg
     private int lgk;
     private int emitMin;
     private int emitMinCounter = 0;
-    private String stateDescriptor;
-
-    private transient ListState<HllSketchAggregation> checkpointedState;
 
     public HllSketchFunction(KeySelector keySelector, KeySelector aggregateSelector) {
         this(keySelector, aggregateSelector, 1, TgtHllType.HLL_4, 4);
@@ -35,7 +29,7 @@ public class HllSketchFunction<T> extends RichFlatMapFunction<T, HllSketchAggreg
 
     public HllSketchFunction(KeySelector keySelector, KeySelector aggregateSelector, int emitMin, String stateDescriptor) {
         this(keySelector, aggregateSelector, emitMin, TgtHllType.HLL_4, 4);
-        this.stateDescriptor = stateDescriptor;
+//        this.stateDescriptor = stateDescriptor;
     }
 
     public HllSketchFunction(KeySelector keySelector, KeySelector aggregateSelector, int emitMin, TgtHllType tgtHllType, int lgk) {
@@ -52,7 +46,7 @@ public class HllSketchFunction<T> extends RichFlatMapFunction<T, HllSketchAggreg
         this.tgtHllType = tgtHllType;
         this.lgk = lgk;
         this.emitMin = emitMin;
-        this.stateDescriptor = stateDescriptor;
+//        this.stateDescriptor = stateDescriptor;
     }
 
 
